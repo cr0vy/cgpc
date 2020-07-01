@@ -61,12 +61,11 @@ class AppWidget(Gtk.Box):
         self.app_name.set_text(name)
         self.category.set_text(category)
 
-        app_information = cmd.get_app_information(category, name)[0]
-        app_info_list = app_information.split(" | ")
-        version_text = app_info_list[1].split(": ")[1]
-        license_text = app_info_list[2].split(": ")[1]
-        homepage_text = app_info_list[3].split(": ")[1]
-        description = app_info_list[4].split(": ")[1]
+        pkg_info = cmd.get_app_information(category, name)
+        version_text = pkg_info.get_best_version()
+        license_text = pkg_info.get_license()
+        homepage_text = pkg_info.get_homepage()
+        description = pkg_info.get_description()
 
         self.version_label.set_text(version_text)
         self.license_label.set_text(license_text)
@@ -110,16 +109,13 @@ class ListBox(Gtk.Frame):
 
         self.add(self.box)
 
-    def set_data(self, name: str, category: str = ""):
+    def set_data(self, name: str, category: str, version: str):
         pixbuf = Gtk.IconTheme.get_default().load_icon("muon", 48, 0)
 
         self.pkg_image.set_from_pixbuf(pixbuf)
         self.name_label.set_text(name)
         self.category_label.set_text("Category:\n" + category)
-
-        version_output = cmd.get_pkg_best_version(category, name)[0]
-        version_text = version_output.split(" | ")[1].split(": ")[1]
-        self.version_label.set_text("Version:\n" + version_text)
+        self.version_label.set_text("Version: " + version)
 
 
 class ListViewWidget(Gtk.Box):
@@ -148,17 +144,25 @@ class ListViewWidget(Gtk.Box):
         self.stack.add_named(self.scrolled_window, "list")
         self.stack.add_named(self.app_widget, "app")
 
-    def add_items(self, items_list):
+    def add_items(self, items_list, show_update: bool):
+        for child in self.list_box.get_children():
+            self.list_box.remove(child)
+
         for item in items_list:
             widget = ListBox()
 
-            name = item.split("/")[1]
-            category = item.split("/")[0]
+            name = item.get_name()
+            category = item.get_category()
 
-            widget.set_data(name=name, category=category)
+            if show_update:
+                version = item.get_best_version()
+            else:
+                version = item.get_current_version()
+
+            widget.set_data(name=name, category=category, version=version)
             widget.view_button.connect("clicked", self.show_view_page, widget)
 
-            self.list_box.pack_start(widget, True, True, 0)
+            self.list_box.pack_start(widget, False, False, 0)
 
     def return_list(self, button):
         button.set_sensitive(False)

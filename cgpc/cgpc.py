@@ -14,6 +14,8 @@ class MainWindow(Gtk.Window):
         self.set_title("Custom Gentoo Package Center")
         self.set_size_request(1280, 720)
 
+        cmd.update_pkg_list()
+        
         self.box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
         self.stack_widget = Gtk.Stack()
@@ -47,6 +49,9 @@ class CategoryWidget(ListViewWidget):
 class InstalledWidget(ListViewWidget):
     def __init__(self):
         ListViewWidget.__init__(self)
+        output = cmd.get_installed_list()
+        self.add_items(output, False)
+        self.show_all()
 
 
 class HomeWidget(ListViewWidget):
@@ -58,7 +63,7 @@ class UpdatesWidget(ListViewWidget):
     def __init__(self):
         ListViewWidget.__init__(self)
         output = cmd.get_updates_list()
-        self.add_items(output)
+        self.add_items(output, True)
         self.show_all()
 
 
