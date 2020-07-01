@@ -4,6 +4,9 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
+from . import cmd
+from .widgets import ListViewWidget
+
 
 class MainWindow(Gtk.Window):
     def __init__(self):
@@ -36,24 +39,24 @@ class MainWindow(Gtk.Window):
         self.add(self.box)
 
 
-class CategoryWidget(Gtk.Box):
+class CategoryWidget(ListViewWidget):
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        Gtk.Box.__init__(self)
 
 
-class InstalledWidget(Gtk.Box):
+class InstalledWidget(ListViewWidget):
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        ListViewWidget.__init__(self)
 
 
-class HomeWidget(Gtk.Box):
+class HomeWidget(ListViewWidget):
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        ListViewWidget.__init__(self)
 
 
-class UpdatesWidget(Gtk.Box):
+class UpdatesWidget(ListViewWidget):
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        ListViewWidget.__init__(self)
 
 
 def run():
