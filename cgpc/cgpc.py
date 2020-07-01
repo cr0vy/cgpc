@@ -43,7 +43,7 @@ class MainWindow(Gtk.Window):
 
 class CategoryWidget(ListViewWidget):
     def __init__(self):
-        Gtk.Box.__init__(self)
+        ListViewWidget.__init__(self)
 
 
 class InstalledWidget(ListViewWidget):
