@@ -57,6 +57,9 @@ class HomeWidget(ListViewWidget):
 class UpdatesWidget(ListViewWidget):
     def __init__(self):
         ListViewWidget.__init__(self)
+        output = cmd.get_updates_list()
+        self.add_items(output)
+        self.show_all()
 
 
 def run():

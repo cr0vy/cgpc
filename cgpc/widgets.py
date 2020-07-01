@@ -5,6 +5,8 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository.GdkPixbuf import InterpType
 
+from . import cmd
+
 
 class ListBox(Gtk.Frame):
     def __init__(self):
@@ -14,10 +16,12 @@ class ListBox(Gtk.Frame):
         self.pkg_image = Gtk.Image()
         self.name_label = Gtk.Label()
         self.category_label = Gtk.Label()
+        self.version_label = Gtk.Label()
 
         self.box.pack_start(self.pkg_image, False, False, 5)
         self.box.pack_start(self.name_label, False, False, 5)
         self.box.pack_end(self.category_label, False, False, 5)
+        self.box.pack_end(self.version_label, False, False, 5)
 
         self.add(self.box)
 
@@ -27,6 +31,10 @@ class ListBox(Gtk.Frame):
         self.pkg_image.set_from_pixbuf(pixbuf)
         self.name_label.set_text(name)
         self.category_label.set_text(category)
+
+        version_output = cmd.get_pkg_best_version(category, name)[0]
+        version_text = version_output.split(" | ")[1].split(": ")[1]
+        self.version_label.set_text(version_text)
 
 
 class ListViewWidget(Gtk.Box):
